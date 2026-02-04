@@ -31,7 +31,7 @@ path_1.is_file()
 # Check if the path points to a directory
 path_1.is_dir()
 
-# Print only the file name (with extension)
+# Print only the file name with extension
 print(path_1.name)
 
 # Print the file name without its extension
@@ -55,7 +55,7 @@ print(path_1.absolute())
 
 
 # Create a Path object pointing to a directory named "Modules"
-path_2 = Path("Modules")
+path_2 = Path("Mosh_Tuto/Modules")
 
 # Create the directory (uncomment to use)
 # path_2.mkdir()
