@@ -1,4 +1,6 @@
 # Import Path class to work with filesystem paths in a clean, object-oriented way
+import shutil
+from time import ctime
 from pathlib import Path
 
 # Create a Path object using an absolute Windows path
@@ -55,7 +57,7 @@ print(path_1.absolute())
 
 
 # Create a Path object pointing to a directory named "Modules"
-path_2 = Path("Mosh_Tuto/Modules")
+path_2 = Path("Modules")
 
 # Create the directory (uncomment to use)
 # path_2.mkdir()
@@ -90,4 +92,15 @@ print(py_file_1)
 py_file_2 = [p for p in path_2.rglob("*.py")]
 print(py_file_2)
 
-# 4
+
+source = Path("Modules/ecommerce/__init__.py")
+target = Path() / "__init__.py"
+
+shutil.copy(source, target)
+target.write_text(source.read_text())
+
+# source.unlink()
+# print(ctime(source.stat().st_ctime))
+# print(source.read_text())
+# source.write_text("a = 2 + 1")
+# source.write_bytes()
