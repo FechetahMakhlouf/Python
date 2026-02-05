@@ -93,14 +93,38 @@ py_file_2 = [p for p in path_2.rglob("*.py")]
 print(py_file_2)
 
 
+# Create a Path object pointing to the source file
+# This file is located inside the Modules/ecommerce directory
 source = Path("Modules/ecommerce/__init__.py")
+
+# Create a Path object for the target file
+# This will create (or overwrite) __init__.py in the current working directory
 target = Path() / "__init__.py"
 
+# Copy the source file to the target location using shutil
+# This copies the file content AND metadata (depending on the OS)
 shutil.copy(source, target)
+
+# Copy the file content again using pathlib (this overwrites the target file)
+# read_text() reads the source file as text
+# write_text() writes that text into the target file
 target.write_text(source.read_text())
 
+# -------------------------
+# USEFUL FILE OPERATIONS (commented examples)
+# -------------------------
+
+# Delete the source file
 # source.unlink()
+
+# Print the file creation time in a human-readable format
 # print(ctime(source.stat().st_ctime))
+
+# Read and print the entire content of the source file
 # print(source.read_text())
+
+# Overwrite the source file with new text
 # source.write_text("a = 2 + 1")
-# source.write_bytes()
+
+# Write binary data to the file (used for images, executables, etc.)
+# source.write_bytes(b"...")
