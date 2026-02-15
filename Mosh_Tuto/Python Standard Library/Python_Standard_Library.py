@@ -161,3 +161,4 @@ with ZipFile("files.zip") as zip:
     # Extract all files from the zip into the "extracte" folder
     # The folder will be created if it does not exist
     zip.extractall("extracte")
+ # 6
