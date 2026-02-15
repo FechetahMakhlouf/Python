@@ -1,4 +1,5 @@
 # Import Path class to work with filesystem paths in a clean, object-oriented way
+from zipfile import ZipFile
 import shutil
 from time import ctime
 from pathlib import Path
@@ -129,4 +130,34 @@ target.write_text(source.read_text())
 # Write binary data to the file (used for images, executables, etc.)
 # source.write_bytes(b"...")
 
-# 5
+
+# Create a new zip file in write mode ("w")
+# If the file already exists, it will be overwritten
+with ZipFile("files.zip", "w") as zip:
+
+    # rglob("*.*") searches recursively for all files
+    # inside the "Modules" directory (including subfolders)
+    for path in Path("Modules").rglob("*.*"):
+
+        # Add each file found into the zip archive
+        zip.write(path)
+
+
+# Open the existing zip file in read mode (default mode)
+with ZipFile("files.zip") as zip:
+
+    # Print the list of all file names stored in the zip file
+    print(zip.namelist())
+
+    # Get information about a specific file inside the zip
+    info = zip.getinfo("Modules/ecommerce/__init__.py")
+
+    # Print the original size of the file (before compression)
+    print(info.file_size)
+
+    # Print the compressed size of the file (after compression)
+    print(info.compress_size)
+
+    # Extract all files from the zip into the "extracte" folder
+    # The folder will be created if it does not exist
+    zip.extractall("extracte")
