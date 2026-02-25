@@ -1,3 +1,6 @@
+from pathlib import Path  # Import Path for file handling
+import json               # Import the JSON module
+import json
 import csv  # Import the built-in CSV module
 import csv
 from zipfile import ZipFile
@@ -223,4 +226,35 @@ with open("data_2.csv") as file_2:
     for row in reader_2:
         print(row)
 
-# 7
+
+# Create a list of dictionaries (Python objects)
+movies = [
+    {"id": 1, "title": "Terminator", "year": 1985},
+    {"id": 2, "title": "Mr.bean", "year": 1970}
+]
+
+# Convert Python object (list) to a JSON-formatted string
+data_1 = json.dumps(movies)
+
+# Print the JSON string
+print(data_1)
+
+# Write the JSON string to a file
+Path("movies.json").write_text(data_1)
+
+# Read the JSON string back from the file
+data_2 = Path("movies.json").read_text()
+
+# Convert the JSON string back to a Python object
+movies = json.loads(data_2)
+
+# Print the full Python object (list of dictionaries)
+print(movies)
+
+# Print the first dictionary in the list
+print(movies[0])
+
+# Print the value of the "title" key from the first dictionary
+print(movies[0]["title"])
+
+# 8
