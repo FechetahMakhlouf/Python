@@ -1,3 +1,4 @@
+import sqlite3
 from pathlib import Path  # Import Path for file handling
 import json               # Import the JSON module
 import json
@@ -257,4 +258,23 @@ print(movies[0])
 # Print the value of the "title" key from the first dictionary
 print(movies[0]["title"])
 
-# 8
+
+films = json.loads(Path("movies.json").read_text())
+
+print(films)
+
+with sqlite3.connect("DB.sqlite3") as connection:
+    command = "INSERT INTO Films VALUES(?,?,?)"
+    for film in films:
+        connection.execute(command, tuple(film.values()))
+    connection.commit()
+
+with sqlite3.connect("DB.sqlite3") as connection:
+    command = "SELECT * FROM Films"
+    cursor = connection.execute(command)
+    # for row in cursor:
+    #     print(row)
+    films_1 = cursor.fetchall()
+    print(films_1)
+
+# 9
