@@ -1,4 +1,5 @@
-# Import Path class to work with filesystem paths in a clean, object-oriented way
+import csv  # Import the built-in CSV module
+import csv
 from zipfile import ZipFile
 import shutil
 from time import ctime
@@ -161,4 +162,65 @@ with ZipFile("files.zip") as zip:
     # Extract all files from the zip into the "extracte" folder
     # The folder will be created if it does not exist
     zip.extractall("extracte")
- # 6
+
+
+# -------------------------
+# WRITING TO data_1.csv
+# -------------------------
+
+# Open the file in write mode ("w")
+# If the file does not exist, it will be created
+# If it exists, it will be overwritten
+with open("data_1.csv", "w", newline="") as file_1:
+    writer_1 = csv.writer(file_1)  # Create a CSV writer object
+
+    # Write a single row (header)
+    writer_1.writerow(["transaction_id", "product_id", "price"])
+
+    # Write individual rows
+    writer_1.writerow([1000, 12, 33])
+    writer_1.writerow([1025, 52, 42])
+    writer_1.writerow([1425, 12, 46])
+    writer_1.writerow([1656, 11, 83])
+
+
+# -------------------------
+# WRITING TO data_2.csv
+# -------------------------
+
+with open("data_2.csv", "w", newline="") as file_2:
+    writer_2 = csv.writer(file_2)
+
+    # writerows() writes multiple rows at once (list of lists)
+    writer_2.writerows([
+        ["Name", "Email", "Phone"],          # Header row
+        ["P1", "P1@email.com", "+213 ..."],
+        ["P2", "P2@email.com", "+213 ..."],
+        ["P3", "P3@email.com", "+213 ..."],
+        ["P4", "P4@email.com", "+213 ..."]
+    ])
+
+
+# -------------------------
+# READING data_1.csv
+# -------------------------
+
+with open("data_1.csv") as file_1:
+    reader_1 = csv.reader(file_1)  # Create a CSV reader object
+
+    # Loop through each row in the file
+    for row in reader_1:
+        print(row)  # Each row is returned as a list
+
+
+# -------------------------
+# READING data_2.csv
+# -------------------------
+
+with open("data_2.csv") as file_2:
+    reader_2 = csv.reader(file_2)
+
+    for row in reader_2:
+        print(row)
+
+# 7
