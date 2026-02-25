@@ -1,13 +1,22 @@
+# ==============================
+# 1. IMPORTS
+# ==============================
 import sqlite3
-from pathlib import Path  # Import Path for file handling
-import json               # Import the JSON module
-import json
-import csv  # Import the built-in CSV module
-import csv
-from zipfile import ZipFile
+from pathlib import Path          # For object-oriented filesystem paths
+import json                        # For JSON serialization/deserialization
+import json                        # Duplicate import – kept as per instruction
+import csv                         # For reading/writing CSV files
+import csv                         # Duplicate import – kept as per instruction
+from zipfile import ZipFile        # For creating/reading zip archives
+# For high-level file operations (copy, move, etc.)
 import shutil
-from time import ctime
-from pathlib import Path
+from time import ctime              # For human-readable timestamps
+from pathlib import Path            # Duplicate import – kept as per instruction
+
+
+# ==============================
+# 2. PATHLIB BASICS
+# ==============================
 
 # Create a Path object using an absolute Windows path
 Path(r"C:\Program Files\Microsoft")
@@ -62,6 +71,10 @@ path_1 = path_1.with_name("file.txt")
 print(path_1.absolute())
 
 
+# ==============================
+# 3. DIRECTORY OPERATIONS (commented examples)
+# ==============================
+
 # Create a Path object pointing to a directory named "Modules"
 path_2 = Path("Modules")
 
@@ -73,6 +86,11 @@ path_2 = Path("Modules")
 
 # Rename the directory (uncomment to use)
 # path_2.rename("ecommerce2")
+
+
+# ==============================
+# 4. ITERATING OVER DIRECTORIES AND FILE SEARCH
+# ==============================
 
 # Iterate over all items (files and folders) inside the directory
 for p in path_2.iterdir():
@@ -90,7 +108,7 @@ print(paths)
 paths = [p for p in path_2.iterdir() if p.is_dir()]
 print(paths)
 
-# Find all Python files (*.py) in the directory (non-recursive)
+# Find all Python files (*.py) in the directory (non‑recursive)
 py_file_1 = [p for p in path_2.glob("*.py")]
 print(py_file_1)
 
@@ -98,6 +116,10 @@ print(py_file_1)
 py_file_2 = [p for p in path_2.rglob("*.py")]
 print(py_file_2)
 
+
+# ==============================
+# 5. FILE OPERATIONS (copy, read, write, delete)
+# ==============================
 
 # Create a Path object pointing to the source file
 # This file is located inside the Modules/ecommerce directory
@@ -136,6 +158,10 @@ target.write_text(source.read_text())
 # source.write_bytes(b"...")
 
 
+# ==============================
+# 6. WORKING WITH ZIP ARCHIVES
+# ==============================
+
 # Create a new zip file in write mode ("w")
 # If the file already exists, it will be overwritten
 with ZipFile("files.zip", "w") as zip:
@@ -167,6 +193,10 @@ with ZipFile("files.zip") as zip:
     # The folder will be created if it does not exist
     zip.extractall("extracte")
 
+
+# ==============================
+# 7. CSV FILE HANDLING
+# ==============================
 
 # -------------------------
 # WRITING TO data_1.csv
@@ -228,6 +258,10 @@ with open("data_2.csv") as file_2:
         print(row)
 
 
+# ==============================
+# 8. JSON SERIALIZATION / DESERIALIZATION
+# ==============================
+
 # Create a list of dictionaries (Python objects)
 movies = [
     {"id": 1, "title": "Terminator", "year": 1985},
@@ -259,16 +293,25 @@ print(movies[0])
 print(movies[0]["title"])
 
 
+# One‑liner: read JSON file and parse it directly
 films = json.loads(Path("movies.json").read_text())
 
 print(films)
 
+
+# ==============================
+# 9. SQLITE3 DATABASE OPERATIONS
+# ==============================
+
+# Connect to (or create) an SQLite database file
 with sqlite3.connect("DB.sqlite3") as connection:
+    # Insert each film from the previously loaded JSON data
     command = "INSERT INTO Films VALUES(?,?,?)"
     for film in films:
         connection.execute(command, tuple(film.values()))
     connection.commit()
 
+# Query the database and fetch all results
 with sqlite3.connect("DB.sqlite3") as connection:
     command = "SELECT * FROM Films"
     cursor = connection.execute(command)
@@ -276,5 +319,6 @@ with sqlite3.connect("DB.sqlite3") as connection:
     #     print(row)
     films_1 = cursor.fetchall()
     print(films_1)
+
 
 # 9
