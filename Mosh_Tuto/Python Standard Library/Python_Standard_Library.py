@@ -1,18 +1,17 @@
 # ==============================
 # 1. IMPORTS
 # ==============================
-from datetime import datetime
+import string
+import random
+from datetime import datetime, timedelta
 import time
 import sqlite3
-from pathlib import Path          # For object-oriented filesystem paths
-import json                        # For JSON serialization/deserialization
-import csv                         # For reading/writing CSV files
-from zipfile import ZipFile        # For creating/reading zip archives
-# For high-level file operations (copy, move, etc.)
+from pathlib import Path
+import json
+import csv
+from zipfile import ZipFile
 import shutil
-from time import ctime              # For human-readable timestamps
-from pathlib import Path            # Duplicate import – kept as per instruction
-
+from time import ctime
 
 # ==============================
 # 2. PATHLIB BASICS
@@ -348,10 +347,10 @@ end = time.time()
 
 # Calculate the total execution time
 # (ending time - starting time)
-duration = end - start
+duration_1 = end - start
 
 # Print the execution duration in seconds
-print(duration)
+print(duration_1)
 
 
 # ==============================
@@ -403,4 +402,96 @@ print(dt.strftime("%Y/%m"))
 # this will usually print False
 print(dt1 > dt2)
 
-# 12 v 11
+# ==============================
+# 12. TIMEDELTA AND DATE DIFFERENCE
+# ==============================
+
+
+# Create a datetime object for January 1st, 2025
+# Then add:
+# - 1 day
+# - 1000 seconds
+#
+# timedelta() is used to represent a duration of time
+dt3 = datetime(2025, 1, 1) + timedelta(days=1, seconds=1000)
+
+# Print the new calculated date and time
+print(dt3)
+
+
+# Get the current date and time from the system
+dt4 = datetime.now()
+
+# Print the current datetime
+print(dt4)
+
+
+# Subtract two datetime objects
+# Result = timedelta object (difference between dates)
+duration_2 = dt4 - dt3
+
+# Print the full duration difference
+# Example: 120 days, 5:30:10
+print(duration_2)
+
+
+# Print ONLY the number of days in the duration
+print("days", duration_2.days)
+
+# Print ONLY the remaining seconds
+# (seconds left after removing full days)
+print("seconds", duration_2.seconds)
+
+# Print the TOTAL duration in seconds
+# Includes days + hours + minutes + seconds
+print("total_seconds", duration_2.total_seconds())
+
+# ==============================
+# 13. RANDOM MODULE OPERATIONS
+# ==============================
+
+
+# Generate a random floating-point number
+# Range: 0.0 <= number < 1.0
+print(random.random())
+
+
+# Generate a random INTEGER between 1 and 10
+# Both 1 and 10 are INCLUDED
+print(random.randint(1, 10))
+
+
+# Select ONE random element from a list
+print(random.choice([1, 2, 3, 4]))
+
+
+# Select MULTIPLE random elements from a list
+# k=2 means choose 2 elements
+# choices() allows repeated values
+print(random.choices([1, 2, 3, 4], k=2))
+
+
+# Generate a random string of 4 characters
+#
+# string.ascii_letters → all uppercase and lowercase letters
+# string.digits → numbers from 0 to 9
+#
+# random.choices(..., k=4)
+# selects 4 random characters
+#
+# "".join(...)
+# joins the characters into a single string
+print("".join(random.choices(
+    string.ascii_letters + string.digits,
+    k=4
+)))
+
+
+# Create a list of numbers
+numbers = [1, 2, 3, 4]
+
+# Shuffle the list randomly (modifies the original list)
+random.shuffle(numbers)
+
+# Print the shuffled list
+print(numbers)
