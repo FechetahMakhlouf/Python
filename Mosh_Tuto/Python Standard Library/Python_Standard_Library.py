@@ -1,12 +1,12 @@
 # ==============================
 # 1. IMPORTS
 # ==============================
+from datetime import datetime
+import time
 import sqlite3
 from pathlib import Path          # For object-oriented filesystem paths
 import json                        # For JSON serialization/deserialization
-import json                        # Duplicate import – kept as per instruction
 import csv                         # For reading/writing CSV files
-import csv                         # Duplicate import – kept as per instruction
 from zipfile import ZipFile        # For creating/reading zip archives
 # For high-level file operations (copy, move, etc.)
 import shutil
@@ -304,12 +304,12 @@ print(films)
 # ==============================
 
 # Connect to (or create) an SQLite database file
-with sqlite3.connect("DB.sqlite3") as connection:
-    # Insert each film from the previously loaded JSON data
-    command = "INSERT INTO Films VALUES(?,?,?)"
-    for film in films:
-        connection.execute(command, tuple(film.values()))
-    connection.commit()
+# with sqlite3.connect("DB.sqlite3") as connection:
+#     # Insert each film from the previously loaded JSON data
+#     command = "INSERT INTO Films VALUES(?,?,?)"
+#     for film in films:
+#         connection.execute(command, tuple(film.values()))
+#     connection.commit()
 
 # Query the database and fetch all results
 with sqlite3.connect("DB.sqlite3") as connection:
@@ -321,4 +321,86 @@ with sqlite3.connect("DB.sqlite3") as connection:
     print(films_1)
 
 
-# Video N° 9
+# ==============================
+# 10. MEASURING EXECUTION TIME
+# ==============================
+
+# Define a simple function named send_email
+# This function simulates a task by running a loop 1000 times
+def send_email():
+
+    # Loop from 0 to 999
+    # "pass" means "do nothing"
+    # Used here only to simulate some processing time
+    for i in range(1000):
+        pass
+
+
+# Store the current time BEFORE running the function
+# time.time() returns the current timestamp in seconds
+start = time.time()
+
+# Call the function
+send_email()
+
+# Store the current time AFTER the function finishes
+end = time.time()
+
+# Calculate the total execution time
+# (ending time - starting time)
+duration = end - start
+
+# Print the execution duration in seconds
+print(duration)
+
+
+# ==============================
+# 11. DATETIME OPERATIONS
+# ==============================
+
+# Create a datetime object manually
+# Format: datetime(year, month, day)
+dt1 = datetime(2025, 1, 1)
+
+# Get the current date and time from the system
+dt2 = datetime.now()
+
+
+# Convert a STRING into a datetime object
+# strptime = string parse time
+# "2025/01/01" → input string
+# "%Y/%m/%d" → format of the string
+# %Y = full year
+# %m = month
+# %d = day
+dt = datetime.strptime("2025/01/01", "%Y/%m/%d")
+
+# Print the datetime object
+print(dt)
+
+
+# Create a datetime object from a Unix timestamp
+# time.time() returns the current timestamp in seconds
+# fromtimestamp() converts it into a readable datetime object
+dt = datetime.fromtimestamp(time.time())
+
+# Print the full current date and time
+print(dt)
+
+# Print only the year and month using an f-string
+print(f"{dt.year}/{dt.month}")
+
+
+# Convert the datetime object into a formatted STRING
+# strftime = string format time
+# "%Y/%m" → format output as year/month
+print(dt.strftime("%Y/%m"))
+
+
+# Compare two datetime objects
+# Returns True if dt1 is later than dt2
+# Since dt2 is the current date/time,
+# this will usually print False
+print(dt1 > dt2)
+
+# 12 v 11
