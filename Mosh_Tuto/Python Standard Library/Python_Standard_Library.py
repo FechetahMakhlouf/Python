@@ -1,6 +1,9 @@
 # ==============================
 # 1. IMPORTS
 # ==============================
+import subprocess
+import sys
+from string import Template
 from email.mime.image import MIMEImage
 import smtplib
 from email.mime.text import MIMEText
@@ -520,67 +523,241 @@ print("Deployment completed")
 # webbrowser.open("http://google.com")
 
 # ==============================
-# 15. SENDING EMAILS WITH PYTHON
+# 15 & 16. HTML EMAILS WITH TEMPLATE
 # ==============================
 
 
+# Read the HTML template file
+#
+# Path("tamplates.html").read_text()
+# → reads the entire HTML file as text
+#
+# Template(...)
+# → converts the text into a template object
+# Uncomment to use
+# tamplate = Template(Path("tamplates.html").read_text())
+
+
 # Create a multipart email object
-# This allows the email to contain:
-# - text
+# Allows the email to contain:
+# - plain text
+# - HTML
 # - images
-# - files
+# - attachments
 message = MIMEMultipart()
 
 
 # Set the sender name/email
 message["from"] = "Fechetah Makhlouf"
 
-# Set the receiver email address
+# Set the receiver email
 message["to"] = "email@gmail.com"
 
 # Set the email subject
 message["subject"] = "this is a test"
 
 
-# Attach a text body to the email
-message.attach(MIMEText("Body"))
+# Attach a plain text version of the email
+#
+# "plain" means regular text format
+message.attach(MIMEText("Body", "plain"))
 
+
+# Replace variables inside the HTML template
+#
+# Example:
+# If the HTML contains:
+# Hello $name
+#
+# It becomes:
+# Hello Makhlouf
+# Uncomment to use
+# body = tamplate.substitute({"name": "Makhlouf"})
+
+# Alternative syntax:
+# body = tamplate.substitute(name="Makhlouf")
+
+
+# Attach the HTML version of the email
+#
+# "html" tells the email client
+# to render the content as HTML
+# Uncomment to use
+# message.attach(MIMEText(body, "html"))
+
+
+# -------------------------
+# OPTIONAL IMAGE ATTACHMENT
+# -------------------------
 
 # Read an image file as binary data
-# then attach it to the email
-# message.attach(
-# MIMEImage(
-# Path("test.jpg").read_bytes()
-# )
-# )
+# and attach it to the email
+#
+# Uncomment to use
+# message.attach(MIMEImage(Path("test.jpg").read_bytes()))
 
 
-# Create a connection to Gmail's SMTP server
+# -------------------------
+# CONNECT TO SMTP SERVER
+# -------------------------
+
+# Connect to Gmail SMTP server
 #
 # host="smtp.gmail.com"
 # → Gmail SMTP server
 #
 # port=587
-# → Port used for TLS encryption
+# → TLS secure port
 with smtplib.SMTP(host="smtp.gmail.com", port=587) as smtp:
 
-    # Identify ourselves to the SMTP server
+    # Identify the client to the server
     smtp.ehlo()
 
-    # Start TLS encryption for secure communication
+    # Enable secure TLS encryption
     smtp.starttls()
 
     # Login to the Gmail account
     #
-    # Replace:
-    # - email@gmail.com
-    # - PassWord
+    # Replace with real credentials
     #
-    # with real credentials
+    # Uncomment to use
     # smtp.login("email@gmail.com", "PassWord")
 
     # Send the email message
+    #
+    # Uncomment to use
     # smtp.send_message(message)
 
     # Print confirmation message
     print("sent...")
+
+# ==============================
+# 17. COMMAND-LINE ARGUMENTS (sys.argv)
+# ==============================
+
+
+# sys.argv is a LIST containing:
+#
+# sys.argv[0]
+# → the Python file name
+#
+# sys.argv[1]
+# → first argument entered by the user
+#
+# Example command:
+# python3 Python_Standard_Library.py mypassword
+#
+# Result:
+# sys.argv[0] = "Python_Standard_Library.py"
+# sys.argv[1] = "mypassword"
+
+
+# Check if ONLY the script name was provided
+#
+# len(sys.argv) == 1
+# means no additional arguments were entered
+if len(sys.argv) == 1:
+
+    # Print usage instructions
+    print("USAGE : python3 Python_Standard_Library.py <password>")
+
+else:
+    # Store the first user argument
+    # (the password entered in terminal)
+    password = sys.argv[1]
+
+    # Print the password
+    print("Password", password)
+
+# ==============================
+# 18. RUNNING EXTERNAL COMMANDS
+# ==============================
+
+# Import the subprocess module
+# Used to execute external programs and shell commands
+
+
+# -------------------------
+# SIMPLE COMMAND EXAMPLE
+# -------------------------
+
+# Example:
+# Run the command: ls -l
+#
+# ls  → list directory contents
+# -l  → long format
+#
+# capture_output=True
+# → saves stdout and stderr instead of printing them directly
+#
+# text=True
+# → returns output as STRING instead of bytes
+#
+# Uncomment to use
+# completed = subprocess.run(
+#     ['ls', '-l'],
+#     capture_output=True,
+#     text=True
+# )
+
+
+# -------------------------
+# RUN A PYTHON SCRIPT
+# -------------------------
+
+try:
+
+    # Run another Python file named test.py
+    #
+    # ['python', 'test.py']
+    # → command executed in terminal
+    #
+    # capture_output=True
+    # → capture stdout and stderr
+    #
+    # text=True
+    # → convert output into text format
+    #
+    # check=True
+    # → raise an exception if the command fails
+    completed = subprocess.run(
+        ['python', 'test.py'],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+
+    # -------------------------
+    # COMMAND INFORMATION
+    # -------------------------
+
+    # Print the executed command arguments
+    print("args", completed.args)
+
+    # Print the return code
+    #
+    # 0 → success
+    # non-zero → error
+    print("returcode", completed.returncode)
+
+    # Print error output (stderr)
+    print("stderr", completed.stderr)
+
+    # Print normal output (stdout)
+    print("stdout", completed.stdout)
+
+
+# -------------------------
+# HANDLE EXECUTION ERRORS
+# -------------------------
+
+except subprocess.CalledProcessError as ex:
+
+    # This exception occurs when:
+    # check=True AND the command fails
+    #
+    # Example:
+    # - syntax error in test.py
+    # - file not found
+    # - runtime exception
+    print(ex)
