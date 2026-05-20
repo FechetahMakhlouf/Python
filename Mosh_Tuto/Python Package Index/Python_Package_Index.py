@@ -377,30 +377,14 @@ print(response.status_code)
 # - creates Pipfile
 # - creates Pipfile.lock
 
-
 # -------------------------
-# PIPFILE
+# INSTALL FROM EXISTING Pipfile
 # -------------------------
 
-# Pipfile stores:
-# - project dependencies
-# - Python version requirements
+# Install all dependencies
 #
-# Example:
-#
-# [packages]
-# requests = "*"
-
-
-# -------------------------
-# PIPFILE.LOCK
-# -------------------------
-
-# Pipfile.lock stores:
-# - exact package versions
-# - dependency tree
-#
-# Used for reproducible installations
+# Command:
+# pipenv install
 
 
 # -------------------------
@@ -421,17 +405,6 @@ print(response.status_code)
 #
 # Command:
 # pipenv run python app.py
-
-
-# -------------------------
-# INSTALL DEVELOPMENT PACKAGES
-# -------------------------
-
-# Install packages used only for development
-#
-# Example:
-# pipenv install pytest --dev
-
 
 # -------------------------
 # SHOW INSTALLED PACKAGES
@@ -460,16 +433,6 @@ print(response.status_code)
 
 
 # -------------------------
-# INSTALL FROM EXISTING Pipfile
-# -------------------------
-
-# Install all dependencies
-#
-# Command:
-# pipenv install
-
-
-# -------------------------
 # CHECK VIRTUAL ENV LOCATION
 # -------------------------
 
@@ -487,4 +450,419 @@ print(response.status_code)
 #
 # No need to manually create venv folders
 
-# 4 v 5
+# ==============================
+# 4. VIRTUAL ENVIRONMENT IN VSCODE
+# ==============================
+
+# VSCode can automatically detect and use
+# Python virtual environments
+#
+# This helps:
+# - isolate project dependencies
+# - use the correct Python interpreter
+# - avoid package conflicts
+
+
+# -------------------------
+# SELECT PYTHON INTERPRETER
+# -------------------------
+
+# In VSCode:
+#
+# Press:
+# Ctrl + Shift + P
+#
+# Search:
+# Python: Select Interpreter
+#
+# Then choose:
+# the interpreter inside your virtual environment
+#
+# Example path:
+# ./env/Scripts/python.exe
+
+
+# -------------------------
+# VERIFY THE ENVIRONMENT
+# -------------------------
+
+# Open terminal in VSCode
+#
+# You should see:
+#
+# (env)
+#
+# before the terminal path
+#
+# Example:
+# (env) C:\Projects\MyApp>
+
+
+# -------------------------
+# CODE RUNNER ISSUE
+# -------------------------
+
+# Sometimes VSCode Code Runner
+# uses the WRONG Python interpreter
+#
+# To fix this:
+#
+# Open:
+# settings.json
+#
+# Then modify:
+#
+# "code-runner.executorMap"
+#
+# Example:
+#
+# "python":
+# "C:/Users/USERNAME/.virtualenvs/project-name/Scripts/python.exe -u"
+#
+# In your screenshot,
+# VSCode is configured to use:
+#
+# C:/Users/makhl/.virtualenvs/Mosh_Tuto-SKIwAj01/bin/python -u
+#
+# This forces Code Runner
+# to execute Python using the
+# selected virtual environment
+
+
+# -------------------------
+# COMMON ISSUE
+# -------------------------
+
+# If VSCode does NOT detect the environment:
+#
+# 1. Restart VSCode
+# 2. Reopen the project folder
+# 3. Re-select the interpreter manually
+
+
+# -------------------------
+# USEFUL SHORTCUTS
+# -------------------------
+
+# Open terminal:
+# Ctrl + `
+
+# Open command palette:
+# Ctrl + Shift + P
+
+# ==============================
+# 5. PIPFILE & PIPFILE.LOCK
+# ==============================
+
+# Pipfile and Pipfile.lock are used by pipenv
+#
+# They replace:
+# - requirements.txt
+# - manual virtual environment management
+#
+# These files help manage:
+# - dependencies
+# - package versions
+# - Python version
+# - reproducible environments
+
+
+# -------------------------
+# WHAT IS Pipfile ?
+# -------------------------
+
+# Pipfile stores:
+# - project dependencies
+# - Python version requirements
+# - development packages
+#
+# It is human-readable
+
+
+# Example Pipfile:
+#
+# [[source]]
+# url = "https://pypi.org/simple"
+# verify_ssl = true
+# name = "pypi"
+#
+# [packages]
+# requests = "*"
+# django = "==5.0"
+#
+# [dev-packages]
+# pytest = "*"
+#
+# [requires]
+# python_version = "3.12"
+
+
+# -------------------------
+# WHAT IS Pipfile.lock ?
+# -------------------------
+
+# Pipfile.lock stores:
+# - exact package versions
+# - dependency tree
+# - hashes for security
+#
+# It is automatically generated
+#
+# Example:
+#
+# requests==2.32.0
+# urllib3==2.2.1
+#
+# This guarantees:
+# everyone installs EXACTLY
+# the same versions
+
+
+# -------------------------
+# CREATE Pipfile AUTOMATICALLY
+# -------------------------
+
+# Install a package using pipenv
+#
+# Example:
+# pipenv install requests
+
+# This automatically creates:
+# - Pipfile
+# - Pipfile.lock
+
+
+# -------------------------
+# INSTALL ALL DEPENDENCIES
+# -------------------------
+
+# Install packages from Pipfile.lock
+#
+# Command:
+# pipenv install
+
+
+# -------------------------
+# ADD DEVELOPMENT PACKAGES
+# -------------------------
+
+# Example:
+# pipenv install pytest --dev
+
+# Stored under:
+# [dev-packages]
+
+
+# -------------------------
+# UPDATE DEPENDENCIES
+# -------------------------
+
+# Update packages and lock file
+#
+# Command:
+# pipenv update
+
+
+# -------------------------
+# REMOVE A PACKAGE
+# -------------------------
+
+# Example:
+# pipenv uninstall requests
+
+
+# -------------------------
+# WHY Pipfile.lock IS IMPORTANT
+# -------------------------
+
+# Without Pipfile.lock:
+# different developers may install
+# different package versions
+#
+# With Pipfile.lock:
+# everyone gets the SAME environment
+
+
+# -------------------------
+# IMPORTANT
+# -------------------------
+
+# Usually uploaded to GitHub:
+# - Pipfile
+# - Pipfile.lock
+#
+# Usually NOT uploaded:
+# - virtual environment folder
+
+# ==============================
+# 6. MANAGING DEPENDENCIES WITH PIPENV
+# ==============================
+
+# pipenv helps manage:
+# - project dependencies
+# - package versions
+# - virtual environments
+#
+# It automatically updates:
+# - Pipfile
+# - Pipfile.lock
+
+
+# -------------------------
+# INSTALL A PACKAGE
+# -------------------------
+
+# Example:
+# pipenv install requests
+
+# This:
+# - installs requests
+# - updates Pipfile
+# - updates Pipfile.lock
+
+
+# -------------------------
+# INSTALL A SPECIFIC VERSION
+# -------------------------
+
+# Example:
+# pipenv install requests==2.31.0
+
+# Installs exactly version 2.31.0
+
+
+# -------------------------
+# VERSION PATTERNS
+# -------------------------
+
+# Inside Pipfile:
+#
+# [packages]
+# requests = "==2.9.*"
+
+# Meaning:
+# install any version starting with 2.9
+#
+# Allowed:
+# - 2.9.0
+# - 2.9.1
+# - 2.9.5
+#
+# Not allowed:
+# - 2.10.0
+# - 3.0.0
+
+
+# Another example:
+#
+# requests = "~=2.9.0"
+#
+# Meaning:
+# install compatible versions
+#
+# Equivalent to:
+# >=2.9.0 and <2.10.0
+
+
+# -------------------------
+# SHOW INSTALLED PACKAGES
+# -------------------------
+
+# Display dependency tree
+#
+# Command:
+# pipenv graph
+
+# Example output:
+#
+# requests==2.31.0
+# ├── certifi
+# ├── charset-normalizer
+# ├── idna
+# └── urllib3
+
+
+# -------------------------
+# CHECK OUTDATED PACKAGES
+# -------------------------
+
+# Show packages that can be updated
+#
+# Command:
+# pipenv update --outdated
+
+# Displays:
+# - current version
+# - latest version
+
+
+# -------------------------
+# UPDATE ALL PACKAGES
+# -------------------------
+
+# Update dependencies
+#
+# Command:
+# pipenv update
+
+# Updates:
+# - Pipfile.lock
+# - installed packages
+
+
+# -------------------------
+# UPDATE A SINGLE PACKAGE
+# -------------------------
+
+# Example:
+# pipenv update requests
+
+
+# -------------------------
+# REMOVE A PACKAGE
+# -------------------------
+
+# Example:
+# pipenv uninstall requests
+
+
+# -------------------------
+# INSTALL DEVELOPMENT PACKAGES
+# -------------------------
+
+# Example:
+# pipenv install pytest --dev
+
+# Added under:
+# [dev-packages]
+
+
+# -------------------------
+# INSTALL FROM Pipfile.lock
+# -------------------------
+
+# Reinstall exact dependency versions
+#
+# Command:
+# pipenv install
+
+
+# -------------------------
+# VERIFY SECURITY ISSUES
+# -------------------------
+
+# Check for known vulnerabilities
+#
+# Command:
+# pipenv check
+
+
+# -------------------------
+# IMPORTANT
+# -------------------------
+
+# Pipfile.lock guarantees:
+# every developer installs
+# the exact same dependency versions
+
+# V 8
