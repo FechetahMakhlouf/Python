@@ -1,6 +1,11 @@
 # ==============================
 # 1. IMPORTS
 # ==============================
+from email.mime.image import MIMEImage
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import webbrowser
 import string
 import random
 from datetime import datetime, timedelta
@@ -495,3 +500,87 @@ random.shuffle(numbers)
 
 # Print the shuffled list
 print(numbers)
+
+# ==============================
+# 14. OPENING A WEBSITE WITH WEBBROWSER
+# ==============================
+
+
+# Print a deployment success message
+print("Deployment completed")
+
+
+# Open the Google website in the default browser
+#
+# webbrowser.open(url)
+# - url → the website address to open
+#
+# When executed, the browser will automatically launch
+# and navigate to the specified URL
+# webbrowser.open("http://google.com")
+
+# ==============================
+# 15. SENDING EMAILS WITH PYTHON
+# ==============================
+
+
+# Create a multipart email object
+# This allows the email to contain:
+# - text
+# - images
+# - files
+message = MIMEMultipart()
+
+
+# Set the sender name/email
+message["from"] = "Fechetah Makhlouf"
+
+# Set the receiver email address
+message["to"] = "email@gmail.com"
+
+# Set the email subject
+message["subject"] = "this is a test"
+
+
+# Attach a text body to the email
+message.attach(MIMEText("Body"))
+
+
+# Read an image file as binary data
+# then attach it to the email
+# message.attach(
+# MIMEImage(
+# Path("test.jpg").read_bytes()
+# )
+# )
+
+
+# Create a connection to Gmail's SMTP server
+#
+# host="smtp.gmail.com"
+# → Gmail SMTP server
+#
+# port=587
+# → Port used for TLS encryption
+with smtplib.SMTP(host="smtp.gmail.com", port=587) as smtp:
+
+    # Identify ourselves to the SMTP server
+    smtp.ehlo()
+
+    # Start TLS encryption for secure communication
+    smtp.starttls()
+
+    # Login to the Gmail account
+    #
+    # Replace:
+    # - email@gmail.com
+    # - PassWord
+    #
+    # with real credentials
+    # smtp.login("email@gmail.com", "PassWord")
+
+    # Send the email message
+    # smtp.send_message(message)
+
+    # Print confirmation message
+    print("sent...")
