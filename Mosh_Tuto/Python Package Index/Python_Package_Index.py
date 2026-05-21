@@ -865,4 +865,104 @@ print(response.status_code)
 # every developer installs
 # the exact same dependency versions
 
-# V 8
+# ==============================
+# 7. Publishing Packages
+# ==============================
+
+# Your project structure:
+#
+# MakhloufFechetah_PDF/
+# │
+# ├── build/
+# ├── dist/
+# ├── data/
+# ├── tests/
+# │
+# ├── MakhloufFechetah_PDF/
+# │   ├── __init__.py
+# │   ├── pdf_to_image.py
+# │   └── pdf_to_text.py
+# │
+# ├── LICENSE
+# ├── README.md
+# └── setup.py
+
+
+# -------------------------
+# IMPORTANT FOLDERS
+# -------------------------
+
+# build/
+# → temporary build files
+
+# dist/
+# → generated package files
+#
+# Example:
+# .whl
+# .tar.gz
+
+# tests/
+# → unit tests
+
+# data/
+# → project data files
+
+# README.md
+# → documentation shown on PyPI
+
+# LICENSE
+# → package license
+
+
+# -------------------------
+# BUILD THE PACKAGE
+# -------------------------
+
+# Command:
+# python -m build
+
+# Creates:
+#
+# dist/
+# ├── MakhloufFechetah_PDF-1.0.0.tar.gz
+# └── MakhloufFechetah_PDF-1.0.0-py3-none-any.whl
+
+
+# -------------------------
+# UPLOAD TO PYPI
+# -------------------------
+
+# Command:
+# twine upload dist/*
+
+
+# -------------------------
+# INSTALL YOUR PACKAGE
+# -------------------------
+
+# After publishing:
+#
+# pip install MakhloufFechetah_PDF
+
+
+# -------------------------
+# IMPROVED setup.py (OPTIONAL)
+# -------------------------
+
+# Better version with more metadata:
+#
+# setuptools.setup(
+#     name="MakhloufFechetah_PDF",
+#     version="1.0.0",
+#     author="Makhlouf",
+#     description="PDF utilities package",
+#     long_description=Path("README.md").read_text(),
+#     long_description_content_type="text/markdown",
+#     packages=setuptools.find_packages(
+#         exclude=["tests", "data"]
+#     ),
+#     python_requires=">=3.10",
+# )
+
+# 8
