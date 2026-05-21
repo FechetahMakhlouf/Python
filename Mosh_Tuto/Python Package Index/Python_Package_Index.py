@@ -965,4 +965,188 @@ print(response.status_code)
 #     python_requires=">=3.10",
 # )
 
-# 8
+# ==============================
+# 8. DOCSTRINGS
+# ==============================
+
+# A docstring is a special string used to document:
+# - functions
+# - classes
+# - modules
+#
+# It is written using triple quotes:
+# """ """
+#
+# Docstrings explain:
+# - what the code does
+# - parameters
+# - return values
+# - usage
+
+# ==============================
+# BEST PRACTICES
+# ==============================
+
+# Good docstrings should:
+# - be clear
+# - explain purpose
+# - explain parameters
+# - explain return values
+# - include examples for complex functions
+
+
+# ==============================
+# COMMON CONVENTION
+# ==============================
+
+# Most Python developers use:
+#
+# Google Style
+# or
+# NumPy Style
+#
+# for writing professional docstrings
+
+# ==============================
+# 9. PYDOC
+# ==============================
+
+# pydoc is a built-in Python tool
+# used to generate and display
+# documentation from:
+#
+# - modules
+# - functions
+# - classes
+# - packages
+#
+# It uses DOCSTRINGS automatically
+
+
+# -------------------------
+# BASIC USAGE
+# -------------------------
+
+# Show documentation for a module
+#
+# Command:
+# pydoc math
+
+# Displays:
+# - functions
+# - classes
+# - descriptions
+# from the math module
+
+
+# -------------------------
+# HELP FOR A FUNCTION
+# -------------------------
+
+# Example:
+# pydoc random.randint
+
+# Shows documentation for:
+# random.randint()
+
+
+# -------------------------
+# HELP FOR A PACKAGE
+# -------------------------
+
+# Example:
+# pydoc requests
+
+# Displays documentation about
+# the requests package
+
+
+# -------------------------
+# GENERATE HTML DOCUMENTATION
+# -------------------------
+
+# Create HTML documentation page
+#
+# Command:
+# pydoc -w math
+
+# Creates:
+# math.html
+
+
+# -------------------------
+# START LOCAL DOCUMENTATION SERVER
+# -------------------------
+
+# Start a local documentation server
+#
+# Command:
+# pydoc -p 1234
+
+# Then open in browser:
+# http://localhost:1234
+
+# You can browse Python documentation
+# directly from the browser
+
+
+# -------------------------
+# SEARCH FOR MODULES
+# -------------------------
+
+# Search modules by keyword
+#
+# Command:
+# pydoc modules
+
+# Lists all available modules
+
+
+# -------------------------
+# USING help() INSIDE PYTHON
+# -------------------------
+
+# Python also provides help()
+#
+# Example:
+
+help(str)
+
+# Shows documentation for the str class
+
+
+# Another example:
+help(list.append)
+
+
+# -------------------------
+# PYDOC WITH YOUR OWN FILES
+# -------------------------
+
+# If your file contains docstrings,
+# pydoc can automatically generate
+# documentation from it
+#
+# Example:
+# pydoc myfile
+
+
+# -------------------------
+# WHY PYDOC IS USEFUL
+# -------------------------
+
+# pydoc helps:
+# - understand libraries quickly
+# - generate documentation
+# - inspect functions/classes
+# - explore Python modules
+
+
+# -------------------------
+# IMPORTANT
+# -------------------------
+
+# Good docstrings improve:
+# - pydoc output
+# - readability
+# - project documentation
