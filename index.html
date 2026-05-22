@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dev Notes — Python & Django · Makhlouf Fechetah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #0e0f13;
+            --surface: #16171d;
+            --border: #26283a;
+            --accent1: #f97316;
+            /* orange  — Python */
+            --accent2: #22d3ee;
+            /* cyan    — Django  */
+            --accent1-dim: #f9731620;
+            --accent2-dim: #22d3ee20;
+            --text: #e2e4ef;
+            --muted: #7a7d97;
+            --code-bg: #111318;
+            --sidebar-w: 280px;
+            --header-h: 60px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 15px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent1);
+            box-shadow: 0 0 12px var(--accent1);
+        }
+
+        .logo span.sep {
+            color: var(--muted);
+            font-weight: 400;
+            margin: 0 4px;
+        }
+
+        .logo span.d {
+            color: var(--accent2);
+        }
+
+        .logo span.p {
+            color: var(--accent1);
+        }
+
+        .header-meta {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        .badge-py {
+            background: var(--accent1-dim);
+            color: var(--accent1);
+            border: 1px solid var(--accent1)40;
+        }
+
+        .badge-dj {
+            background: var(--accent2-dim);
+            color: var(--accent2);
+            border: 1px solid var(--accent2)40;
+        }
+
+        /* ── LAYOUT ── */
+        .layout {
+            display: flex;
+            padding-top: var(--header-h);
+            flex: 1;
+        }
+
+        /* ── SIDEBAR ── */
+        nav.sidebar {
+            position: fixed;
+            top: var(--header-h);
+            bottom: 0;
+            left: 0;
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0 40px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        nav.sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        nav.sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        nav.sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .nav-group {
+            margin-bottom: 4px;
+        }
+
+        .nav-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            border-left: 3px solid transparent;
+            transition: all .2s;
+        }
+
+        .nav-group-header.py {
+            color: var(--accent1);
+            border-left-color: var(--accent1);
+            background: var(--accent1-dim);
+        }
+
+        .nav-group-header.dj {
+            color: var(--accent2);
+            border-left-color: var(--accent2);
+            background: var(--accent2-dim);
+        }
+
+        .nav-group-header .chevron {
+            margin-left: auto;
+            transition: transform .25s;
+            font-size: 10px;
+        }
+
+        .nav-group-header.open .chevron {
+            transform: rotate(90deg);
+        }
+
+        .nav-items {
+            display: none;
+            padding: 4px 0;
+        }
+
+        .nav-items.open {
+            display: block;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 6px 20px 6px 34px;
+            color: var(--muted);
+            font-size: 13px;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all .15s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--border)30;
+        }
+
+        .nav-link.active {
+            color: var(--text);
+            border-left-color: var(--accent1);
+            background: var(--accent1-dim);
+        }
+
+        .nav-link.active.dj-link {
+            border-left-color: var(--accent2);
+            background: var(--accent2-dim);
+        }
+
+        /* ── MAIN ── */
+        main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            padding: 48px 56px 80px;
+            max-width: calc(100% - var(--sidebar-w));
+        }
+
+        /* ── HERO ── */
+        .hero {
+            margin-bottom: 56px;
+            padding: 40px 44px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, #16171d 60%, #1a1a2e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 60% at 90% 20%, #f9731610, transparent),
+                radial-gradient(ellipse 50% 50% at 10% 80%, #22d3ee10, transparent);
+            pointer-events: none;
+        }
+
+        .hero-kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 14px;
+            background: linear-gradient(90deg, #f97316, #fbbf24, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            color: var(--muted);
+            max-width: 560px;
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .hero-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pill.orange {
+            background: #f9731615;
+            border: 1px solid #f9731630;
+            color: #fb923c;
+        }
+
+        .pill.cyan {
+            background: #22d3ee15;
+            border: 1px solid #22d3ee30;
+            color: #22d3ee;
+        }
+
+        .pill.gray {
+            background: #ffffff08;
+            border: 1px solid #ffffff15;
+            color: var(--muted);
+        }
+
+        /* ── SECTION ── */
+        .course-section {
+            margin-bottom: 72px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .section-icon.py {
+            background: var(--accent1-dim);
+            border: 1px solid #f9731630;
+        }
+
+        .section-icon.dj {
+            background: var(--accent2-dim);
+            border: 1px solid #22d3ee30;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .section-header h2 span {
+            color: var(--muted);
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+        /* ── ARTICLE (topic card) ── */
+        .topic {
+            margin-bottom: 36px;
+            scroll-margin-top: calc(var(--header-h) + 20px);
+        }
+
+        .topic-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid var(--border);
+        }
+
+        .topic-title.py {
+            background: linear-gradient(90deg, #f9731608, transparent);
+            border-left: 3px solid var(--accent1);
+        }
+
+        .topic-title.dj {
+            background: linear-gradient(90deg, #22d3ee08, transparent);
+            border-left: 3px solid var(--accent2);
+        }
+
+        .topic-title .num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .topic-title .num.py {
+            background: var(--accent1-dim);
+            color: var(--accent1);
+        }
+
+        .topic-title .num.dj {
+            background: var(--accent2-dim);
+            color: var(--accent2);
+        }
+
+        .topic-body {
+            padding: 16px 18px 18px;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            background: var(--surface);
+        }
+
+        /* ── TEXT ELEMENTS ── */
+        h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 20px 0 8px;
+        }
+
+        h3:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #c0c2d4;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            color: #c0c2d4;
+            margin-bottom: 4px;
+        }
+
+        li::marker {
+            color: var(--muted);
+        }
+
+        /* ── CODE ── */
+        pre {
+            margin: 12px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        pre code.hljs {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            border-radius: 8px;
+            padding: 16px 18px;
+            background: var(--code-bg) !important;
+        }
+
+        code:not(.hljs) {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            background: #ffffff0a;
+            border: 1px solid #ffffff10;
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: #fbbf24;
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 12px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #ffffff07;
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            color: #c0c2d4;
+            font-size: 13.5px;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #ffffff04;
+        }
+
+        /* ── CALLOUTS ── */
+        .callout {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 13.5px;
+        }
+
+        .callout-icon {
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .callout.warn {
+            background: #f9731610;
+            border: 1px solid #f9731625;
+            color: #fcd34d;
+        }
+
+        .callout.tip {
+            background: #22d3ee10;
+            border: 1px solid #22d3ee25;
+            color: #67e8f9;
+        }
+
+        .callout.info {
+            background: #a78bfa10;
+            border: 1px solid #a78bfa25;
+            color: #c4b5fd;
+        }
+
+        /* ── COMMAND LINE SNIPPET ── */
+        .cmd-block {
+            background: #0a0b0f;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        .cmd-block .prompt {
+            color: var(--accent2);
+            user-select: none;
+        }
+
+        .cmd-block span {
+            color: #e2e4ef;
+        }
+
+        .cmd-block .comment {
+            color: var(--muted);
+        }
+
+        /* ── FILE TREE ── */
+        .file-tree {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .file-tree .dir {
+            color: var(--accent2);
+        }
+
+        .file-tree .file {
+            color: #c0c2d4;
+        }
+
+        .file-tree .ann {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ── GRID CARDS ── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .mini-card {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent1)40;
+            box-shadow: 0 4px 20px var(--accent1)10;
+        }
+
+        .mini-card h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent1);
+            margin-bottom: 6px;
+        }
+
+        .mini-card p {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .mini-card.cyan h4 {
+            color: var(--accent2);
+        }
+
+        .mini-card.cyan:hover {
+            border-color: var(--accent2)40;
+            box-shadow: 0 4px 20px var(--accent2)10;
+        }
+
+        /* ── FLOW DIAGRAM ── */
+        .flow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+        }
+
+        .flow-step {
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--accent2-dim);
+            border: 1px solid #22d3ee30;
+            color: #67e8f9;
+        }
+
+        .flow-arrow {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ── SEPARATOR ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-left: var(--sidebar-w);
+            padding: 24px 56px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        footer a {
+            color: var(--accent1);
+            text-decoration: none;
+        }
+
+        /* ── SCROLL PROGRESS ── */
+        #progress-bar {
+            position: fixed;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: transparent;
+            z-index: 99;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            width: 0%;
+            transition: width .05s;
+        }
+
+        /* ── SEARCH ── */
+        .search-wrap {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 7px 12px 7px 32px;
+            color: var(--text);
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            position: relative;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%237a7d97'%3E%3Cpath fill-rule='evenodd' d='M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z' clip-rule='evenodd'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: 15px;
+            background-position: 10px center;
+        }
+
+        .search-input::placeholder {
+            color: var(--muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent1)50;
+            box-shadow: 0 0 0 3px var(--accent1-dim);
+        }
+
+        /* ── HIDDEN/SEARCH FILTER ── */
+        .topic.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Progress bar -->
+    <div id="progress-bar">
+        <div id="progress-fill"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <div class="logo-dot"></div>
+            <span class="p">Python</span>
+            <span class="sep">&</span>
+            <span class="d">Django</span>
+            &nbsp;— Dev Notes
+        </div>
+        <div class="header-meta">
+            <span class="badge badge-py">🐍 Python</span>
+            <span class="badge badge-dj">🎬 Django</span>
+            <span style="display:none;" id="hd-author">Makhlouf Fechetah</span>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="search-wrap">
+                <input class="search-input" type="text" id="search" placeholder="Rechercher…" />
+            </div>
+
+            <!-- Python Nav -->
+            <div class="nav-group">
+                <div class="nav-group-header py open" onclick="toggleGroup(this)">
+                    🐍 Python Complet <span class="chevron">▶</span>
+                </div>
+                <div class="nav-items open">
+                    <a class="nav-link" href="#py-types">1. Types Primitifs</a>
+                    <a class="nav-link" href="#py-flow">2. Flux de Contrôle</a>
+                    <a class="nav-link" href="#py-functions">3. Fonctions</a>
+                    <a class="nav-link" href="#py-data">4. Structures de Données</a>
+                    <a class="nav-link" href="#py-classes">5. Classes & POO</a>
+                    <a class="nav-link" href="#py-exceptions">6. Exceptions</a>
+                    <a class="nav-link" href="#py-modules">7. Modules & Packages</a>
+                    <a class="nav-link" href="#py-stdlib">8. Bibliothèque Standard</a>
+                    <a class="nav-link" href="#py-pip">9. Package Index (pip)</a>
+                    <a class="nav-link" href="#py-packages">10. Paquets Populaires</a>
+                    <a class="nav-link" href="#py-own">11. Mon Propre Package</a>
+                </div>
+            </div>
+
+            <!-- Django Nav -->
+            <div class="nav-group">
+                <div class="nav-group-header dj open" onclick="toggleGroup(this)">
+                    🎬 Django — Vidly <span class="chevron">▶</span>
+                </div>
+                <div class="nav-items open">
+                    <a class="nav-link dj-link" href="#dj-intro">1. Introduction</a>
+                    <a class="nav-link dj-link" href="#dj-project">2. Premier Projet</a>
+                    <a class="nav-link dj-link" href="#dj-app">3. Première App</a>
+                    <a class="nav-link dj-link" href="#dj-views">4. Views</a>
+                    <a class="nav-link dj-link" href="#dj-models">5. Models</a>
+                    <a class="nav-link dj-link" href="#dj-migrations">6. Migrations</a>
+                    <a class="nav-link dj-link" href="#dj-admin">7. Admin</a>
+                    <a class="nav-link dj-link" href="#dj-orm">8. ORM & Base de données</a>
+                    <a class="nav-link dj-link" href="#dj-templates">9. Templates</a>
+                    <a class="nav-link dj-link" href="#dj-urls">10. URLs & Paramètres</a>
+                    <a class="nav-link dj-link" href="#dj-api">11. Créer une API</a>
+                    <a class="nav-link dj-link" href="#dj-homepage">12. Homepage & Architecture</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN -->
+        <main>
+
+            <!-- HERO -->
+            <div class="hero">
+                <div class="hero-kicker">Notes de révision · Mosh Hamedani</div>
+                <h1>Python & Django<br />Documentation</h1>
+                <p class="hero-sub">
+                    Guide complet couvrant Python de A à Z et la construction d'applications web Django
+                    avec le projet <strong>Vidly</strong>. Rédigé par <strong>Makhlouf Fechetah</strong>.
+                </p>
+                <div class="hero-pills">
+                    <span class="pill orange">🐍 Python 3.10+</span>
+                    <span class="pill cyan">🎬 Django · Vidly</span>
+                    <span class="pill gray">📦 PyPI · Tastypie</span>
+                    <span class="pill gray">⚡ Bootstrap · ORM</span>
+                </div>
+            </div>
+
+
+            <!-- ════════════════════════════════════ -->
+            <!--  PYTHON SECTION                     -->
+            <!-- ════════════════════════════════════ -->
+            <div class="course-section" id="python">
+                <div class="section-header">
+                    <div class="section-icon py">🐍</div>
+                    <div>
+                        <h2>Python Complet <span>— Cours Mosh Hamedani</span></h2>
+                    </div>
+                </div>
+
+                <!-- 1. Types Primitifs -->
+                <div class="topic" id="py-types">
+                    <div class="topic-title py"><span class="num py">01</span> Types Primitifs</div>
+                    <div class="topic-body">
+                        <h3>Les 4 types de base</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Exemple</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>int</code></td>
+                                    <td><code>5</code></td>
+                                    <td>Nombre entier</td>
+                                </tr>
+                                <tr>
+                                    <td><code>float</code></td>
+                                    <td><code>10.5</code></td>
+                                    <td>Nombre décimal</td>
+                                </tr>
+                                <tr>
+                                    <td><code>bool</code></td>
+                                    <td><code>True / False</code></td>
+                                    <td>Valeur booléenne</td>
+                                </tr>
+                                <tr>
+                                    <td><code>str</code></td>
+                                    <td><code>"hello"</code></td>
+                                    <td>Chaîne de caractères</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h3>Opérations sur les chaînes</h3>
+                        <pre><code class="language-python">course = "Python Programming"
+course.upper()           # "PYTHON PROGRAMMING"
+course.lower()           # "python programming"
+course.title()           # "Python Programming"
+course.find("Pro")       # 7
+course.replace("Python", "Java")  # "Java Programming"
+"Python" in course       # True
+"   hello   ".strip()    # "hello"
+
+# Slicing
+course[0:6]   # "Python"
+course[::-1]  # inversé
+</code></pre>
+                        <h3>f-Strings</h3>
+                        <pre><code class="language-python">first_name = "Makhlouf"
+last_name  = "Fechetah"
+full_name  = f"Bonjour {first_name} {last_name}"
+</code></pre>
+                        <h3>Opérations arithmétiques</h3>
+                        <pre><code class="language-python">10 + 3    # 13   → addition
+10 - 3    # 7    → soustraction
+10 * 3    # 30   → multiplication
+10 / 3    # 3.33 → division flottante
+10 // 3   # 3    → division entière
+10 % 3    # 1    → modulo
+10 ** 3   # 1000 → puissance
+</code></pre>
+                        <h3>Fonctions mathématiques</h3>
+                        <pre><code class="language-python">import math
+round(10.6)       # 11
+abs(-10)          # 10
+math.ceil(10.2)   # 11
+math.floor(10.8)  # 10
+math.sqrt(16)     # 4.0
+math.pow(2, 3)    # 8.0
+max(10, 3)        # 10
+min(10, 3)        # 3
+</code></pre>
+                        <h3>Conversion de types</h3>
+                        <pre><code class="language-python">x = input("Entrer un nombre: ")  # retourne toujours str
+int(x)    # → entier
+float(x)  # → flottant
+str(x)    # → chaîne
+bool(x)   # → booléen
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 2. Flux de contrôle -->
+                <div class="topic" id="py-flow">
+                    <div class="topic-title py"><span class="num py">02</span> Flux de Contrôle</div>
+                    <div class="topic-body">
+                        <h3>Instructions conditionnelles</h3>
+                        <pre><code class="language-python">if age >= 18:
+    print("Adulte")
+elif age >= 13:
+    print("Adolescent")
+else:
+    print("Enfant")
+
+# Opérateur ternaire
+message = "eligible" if age >= 18 else "not eligible"
+</code></pre>
+                        <h3>Opérateurs logiques</h3>
+                        <pre><code class="language-python">a and b   # les deux doivent être True
+a or b    # au moins un True
+not a     # inverse
+
+# Comparaison chaînée
+if 10 <= age <= 60:
+    print("Âge valide")
+</code></pre>
+                        <h3>Boucle for</h3>
+                        <pre><code class="language-python">for number in range(5):         # 0, 1, 2, 3, 4
+for number in range(2, 10, 2):  # 2, 4, 6, 8
+
+for char in "Hello":  # H, e, l, l, o
+
+# break et else sur boucle
+for i in range(5):
+    if i == 3:
+        break
+else:
+    print("Terminé sans break")  # s'exécute seulement si pas de break
+</code></pre>
+                        <h3>Boucle while</h3>
+                        <pre><code class="language-python">while True:
+    commande = input("> ")
+    if commande.lower() == "exit":
+        break
+</code></pre>
+                        <h3>Valeurs Falsy en Python</h3>
+                        <div class="callout info">
+                            <span class="callout-icon">ℹ️</span>
+                            <span><code>0</code>, <code>""</code>, <code>None</code>, <code>[]</code>, <code>{}</code>
+                                sont tous évalués à <code>False</code>.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Fonctions -->
+                <div class="topic" id="py-functions">
+                    <div class="topic-title py"><span class="num py">03</span> Fonctions</div>
+                    <div class="topic-body">
+                        <h3>Définition & appel</h3>
+                        <pre><code class="language-python">def greet(first_name, last_name):
+    print(f"Hello {first_name} {last_name}!")
+
+greet("Makhlouf", "Fechetah")
+</code></pre>
+                        <h3>Arguments par défaut & nommés</h3>
+                        <pre><code class="language-python">def increment(number, by=1):
+    return number + by
+
+increment(5)         # 6  — valeur par défaut
+increment(5, 3)      # 8  — override
+increment(10, by=5)  # 15 — argument nommé (keyword)
+</code></pre>
+                        <h3>*args et **kwargs</h3>
+                        <pre><code class="language-python">def multiply(*numbers):   # tuple
+    result = 1
+    for n in numbers:
+        result *= n
+    return result
+
+multiply(2, 3, 4, 5)  # 120
+
+def save_user(**user_info):   # dictionnaire
+    print(user_info["name"])
+    print(user_info["age"])
+
+save_user(id=1, name="Makhlouf", age=22)
+</code></pre>
+                        <div class="callout warn">
+                            <span class="callout-icon">⚠️</span>
+                            <span>Éviter <code>global</code> autant que possible. Préférer le retour de valeurs.</span>
+                        </div>
+                        <h3>Raccourcis VS Code utiles</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Raccourci</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td><code>F9</code></td>
+                                    <td>Activer/désactiver un breakpoint</td>
+                                </tr>
+                                <tr>
+                                    <td><code>F5</code></td>
+                                    <td>Lancer le débogage</td>
+                                </tr>
+                                <tr>
+                                    <td><code>F10</code></td>
+                                    <td>Step over</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Ctrl+/</code></td>
+                                    <td>Commenter/décommenter</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Ctrl+D</code></td>
+                                    <td>Sélectionner l'occurrence suivante</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Structures de Données -->
+                <div class="topic" id="py-data">
+                    <div class="topic-title py"><span class="num py">04</span> Structures de Données</div>
+                    <div class="topic-body">
+                        <div class="card-grid">
+                            <div class="mini-card">
+                                <h4>list</h4>
+                                <p>Ordonnée, modifiable, doublons autorisés</p>
+                            </div>
+                            <div class="mini-card">
+                                <h4>tuple</h4>
+                                <p>Ordonnée, immuable, doublons autorisés</p>
+                            </div>
+                            <div class="mini-card">
+                                <h4>set</h4>
+                                <p>Non ordonnée, sans doublons</p>
+                            </div>
+                            <div class="mini-card">
+                                <h4>dict</h4>
+                                <p>Paires clé-valeur, ordonnée (Python 3.7+)</p>
+                            </div>
+                        </div>
+                        <h3>Listes</h3>
+                        <pre><code class="language-python">letters = ['a', 'b', 'c', 'd']
+letters.append('e')      # ajouter en fin
+letters.insert(0, 'z')  # insérer à l'index 0
+letters.remove('b')      # supprimer 1ère occurrence
+letters.pop()            # supprimer dernier élément
+
+# List comprehensions
+prices  = [item[1] for item in items]
+filtered = [item for item in items if item[1] >= 10]
+
+# Déballage
+first, *others = [5, 3, 8, 1]  # first=5, others=[3,8,1]
+
+# Zip
+list(zip("ABC", [1,2,3], [10,20,30]))
+# [('A',1,10), ('B',2,20), ('C',3,30)]
+</code></pre>
+                        <h3>Sets — Opérations</h3>
+                        <pre><code class="language-python">first  = {1, 2, 3, 4}
+second = {1, 5}
+first | second  # union        → {1,2,3,4,5}
+first & second  # intersection → {1}
+first - second  # différence   → {2,3,4}
+first ^ second  # symétrique   → {2,3,4,5}
+</code></pre>
+                        <h3>Dictionnaires</h3>
+                        <pre><code class="language-python">point = {"x": 1, "y": 2}
+point["z"] = 20          # ajouter
+point.get("a")           # None si absent (sécurisé)
+del point["x"]           # supprimer
+
+for key, value in point.items():
+    print(key, value)
+
+# Compréhension de dictionnaire
+values = {x: x*2 for x in range(5)}
+</code></pre>
+                        <h3>Générateurs (économie mémoire)</h3>
+                        <pre><code class="language-python">from sys import getsizeof
+
+values_list = [x*2 for x in range(100000)]  # grande mémoire
+values_gen  = (x*2 for x in range(100000))  # ~ 104 bytes !
+</code></pre>
+                        <h3>Stack & Queue</h3>
+                        <pre><code class="language-python"># Stack (LIFO)
+stack = []
+stack.append("a")
+stack.pop()       # retire le dernier
+
+# Queue (FIFO)
+from collections import deque
+queue = deque([])
+queue.append("a")
+queue.popleft()   # retire le premier (efficace)
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 5. Classes & POO -->
+                <div class="topic" id="py-classes">
+                    <div class="topic-title py"><span class="num py">05</span> Classes & POO</div>
+                    <div class="topic-body">
+                        <h3>Création d'une classe</h3>
+                        <pre><code class="language-python">class Point:
+    default_color = "red"   # attribut de CLASSE
+
+    def __init__(self, x, y):
+        self.x = x          # attribut d'INSTANCE
+        self.y = y
+
+    def draw(self):
+        print(f"Point ({self.x}, {self.y})")
+
+    @classmethod
+    def zero(cls):
+        return cls(0, 0)    # constructeur alternatif
+
+point = Point(1, 2)
+point.draw()
+Point.default_color = "Blue"   # change pour toutes les instances
+</code></pre>
+                        <h3>Méthodes magiques (dunder)</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Méthode</th>
+                                    <th>Déclenché par</th>
+                                    <th>Usage</th>
+                                </tr>
+                                <tr>
+                                    <td><code>__init__</code></td>
+                                    <td><code>Point(1,2)</code></td>
+                                    <td>Constructeur</td>
+                                </tr>
+                                <tr>
+                                    <td><code>__str__</code></td>
+                                    <td><code>print(obj)</code></td>
+                                    <td>Représentation chaîne</td>
+                                </tr>
+                                <tr>
+                                    <td><code>__eq__</code></td>
+                                    <td><code>p1 == p2</code></td>
+                                    <td>Égalité</td>
+                                </tr>
+                                <tr>
+                                    <td><code>__add__</code></td>
+                                    <td><code>p1 + p2</code></td>
+                                    <td>Addition</td>
+                                </tr>
+                                <tr>
+                                    <td><code>__len__</code></td>
+                                    <td><code>len(obj)</code></td>
+                                    <td>Longueur</td>
+                                </tr>
+                                <tr>
+                                    <td><code>__iter__</code></td>
+                                    <td><code>for x in obj</code></td>
+                                    <td>Itération</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h3>Properties & Validation</h3>
+                        <pre><code class="language-python">class Product:
+    def __init__(self, price):
+        self.price = price   # appelle le setter
+
+    @property
+    def price(self):
+        return self.__price
+
+    @price.setter
+    def price(self, value):
+        if value < 0:
+            raise ValueError("Prix négatif impossible.")
+        self.__price = value
+</code></pre>
+                        <h3>Héritage</h3>
+                        <pre><code class="language-python">class Animal:
+    def __init__(self):
+        self.age = 1
+    def eat(self):
+        print("eat")
+
+class Mammal(Animal):
+    def __init__(self):
+        super().__init__()
+        self.weight = 2
+    def walk(self):
+        print("walk")
+
+m = Mammal()
+m.eat()             # hérité d'Animal
+isinstance(m, Animal)  # True
+</code></pre>
+                        <h3>Classes Abstraites (ABC)</h3>
+                        <pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Stream(ABC):
+    @abstractmethod
+    def read(self):   # DOIT être implémentée par les sous-classes
+        pass
+
+class FileStream(Stream):
+    def read(self):
+        print("Lecture depuis fichier")
+
+# Stream()      # ❌ erreur — classe abstraite
+stream = FileStream()  # ✅
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 6. Exceptions -->
+                <div class="topic" id="py-exceptions">
+                    <div class="topic-title py"><span class="num py">06</span> Exceptions</div>
+                    <div class="topic-body">
+                        <pre><code class="language-python">try:
+    age = int(input("Âge: "))
+    income = 20000 / age
+except ValueError as ex:
+    print("Valeur invalide:", ex)
+except ZeroDivisionError:
+    print("Division par zéro !")
+else:
+    print("Succès:", income)   # s'exécute si PAS d'exception
+finally:
+    print("Toujours exécuté")  # nettoyage
+</code></pre>
+                        <h3>Lever une exception personnalisée</h3>
+                        <pre><code class="language-python">class InsufficientFundsError(Exception):
+    def __init__(self, amount):
+        super().__init__(f"Fonds insuffisants: {amount}€")
+
+def withdraw(amount, balance):
+    if amount > balance:
+        raise InsufficientFundsError(amount)
+    return balance - amount
+</code></pre>
+                        <h3>Context manager (with)</h3>
+                        <pre><code class="language-python">with open("log.txt", "w") as f:
+    f.write("log entry")
+# f est automatiquement fermé après le bloc
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 7. Modules -->
+                <div class="topic" id="py-modules">
+                    <div class="topic-title py"><span class="num py">07</span> Modules & Packages</div>
+                    <div class="topic-body">
+                        <pre><code class="language-python"># Import complet
+import math
+math.sqrt(16)
+
+# Import partiel
+from math import sqrt, ceil
+sqrt(16)
+
+# Alias
+import numpy as np
+
+# Package (dossier avec __init__.py)
+from mypackage.module import MyClass
+</code></pre>
+                        <div class="callout tip">
+                            <span class="callout-icon">💡</span>
+                            <span><code>sys.path</code> liste tous les dossiers où Python cherche les modules. On peut y
+                                ajouter des chemins personnalisés.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Bibliothèque Standard -->
+                <div class="topic" id="py-stdlib">
+                    <div class="topic-title py"><span class="num py">08</span> Bibliothèque Standard</div>
+                    <div class="topic-body">
+                        <h3>pathlib — Chemins de fichiers</h3>
+                        <pre><code class="language-python">from pathlib import Path
+
+p = Path("dossier/fichier.txt")
+p.exists()       # True/False
+p.name           # "fichier.txt"
+p.stem           # "fichier"
+p.suffix         # ".txt"
+p.parent         # "dossier"
+p.mkdir(parents=True, exist_ok=True)
+
+for f in Path(".").glob("*.py"):
+    print(f)
+</code></pre>
+                        <h3>CSV</h3>
+                        <pre><code class="language-python">import csv
+
+# Lire
+with open("data.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row["Nom"])
+
+# Écrire
+with open("sortie.csv", "w", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["Nom","Age"])
+    writer.writeheader()
+    writer.writerow({"Nom": "Makhlouf", "Age": 22})
+</code></pre>
+                        <h3>JSON</h3>
+                        <pre><code class="language-python">import json
+
+# Sérialiser (Python → JSON)
+data = {"name": "Makhlouf", "age": 22}
+json_str = json.dumps(data, indent=2)
+
+# Désérialiser (JSON → Python)
+obj = json.loads(json_str)
+
+# Fichiers JSON
+with open("data.json", "w") as f:
+    json.dump(data, f, indent=2)
+
+with open("data.json") as f:
+    data = json.load(f)
+</code></pre>
+                        <h3>SQLite</h3>
+                        <pre><code class="language-python">import sqlite3
+
+conn = sqlite3.connect("db.sqlite3")
+cur  = conn.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT)")
+cur.execute("INSERT INTO users VALUES (?, ?)", (1, "Makhlouf"))
+conn.commit()
+
+cur.execute("SELECT * FROM users")
+rows = cur.fetchall()
+conn.close()
+</code></pre>
+                        <h3>datetime</h3>
+                        <pre><code class="language-python">from datetime import datetime, timedelta
+
+now  = datetime.now()
+dt   = datetime(2024, 1, 15, 10, 30)
+diff = now - dt         # timedelta
+past = now - timedelta(days=30)
+str_date = now.strftime("%Y-%m-%d %H:%M")
+parsed   = datetime.strptime("2024-01-15", "%Y-%m-%d")
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 9. Package Index -->
+                <div class="topic" id="py-pip">
+                    <div class="topic-title py"><span class="num py">09</span> Package Index (pip & pipenv)</div>
+                    <div class="topic-body">
+                        <pre><code class="language-bash">pip install requests          # installer un paquet
+pip uninstall requests        # désinstaller
+pip list                      # lister les paquets installés
+pip install requests==2.28.0  # version spécifique
+
+# Pipenv (gestion d'environnements)
+pipenv install django         # installe + crée Pipfile
+pipenv shell                  # activer l'environnement
+pipenv --venv                 # chemin vers le venv
+</code></pre>
+                        <h3>Publier sur PyPI</h3>
+                        <pre><code class="language-bash">pip install setuptools wheel twine
+python setup.py sdist bdist_wheel
+twine upload dist/*
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 10. Paquets Populaires -->
+                <div class="topic" id="py-packages">
+                    <div class="topic-title py"><span class="num py">10</span> Paquets Populaires</div>
+                    <div class="topic-body">
+                        <h3>requests — API HTTP</h3>
+                        <pre><code class="language-python">import requests
+
+response = requests.get("https://jsonplaceholder.typicode.com/users/1")
+data = response.json()   # dict Python
+
+# Avec authentification
+headers = {"Authorization": "Bearer MON_TOKEN"}
+response = requests.get("https://api.exemple.com/data", headers=headers)
+</code></pre>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Méthode HTTP</th>
+                                    <th>Usage</th>
+                                </tr>
+                                <tr>
+                                    <td><code>GET</code></td>
+                                    <td>Récupérer des données</td>
+                                </tr>
+                                <tr>
+                                    <td><code>POST</code></td>
+                                    <td>Envoyer / créer</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PUT</code></td>
+                                    <td>Mettre à jour</td>
+                                </tr>
+                                <tr>
+                                    <td><code>DELETE</code></td>
+                                    <td>Supprimer</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h3>Sécuriser les clés API (.env)</h3>
+                        <pre><code class="language-python">from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("YELP_API_KEY")
+</code></pre>
+                        <div class="callout warn">
+                            <span class="callout-icon">⚠️</span>
+                            <span>Ne jamais mettre une clé API dans le code ! Toujours utiliser un fichier
+                                <code>.env</code> (exclu du versionning).</span>
+                        </div>
+
+                        <h3>BeautifulSoup — Web Scraping</h3>
+                        <pre><code class="language-python">from bs4 import BeautifulSoup
+import requests
+
+response = requests.get("https://exemple.com")
+soup = BeautifulSoup(response.text, "html.parser")
+
+soup.title.text             # titre de la page
+soup.find("p")              # premier paragraphe
+soup.find_all("a")          # tous les liens
+soup.find_all(class_="product")  # par classe CSS
+soup.select(".product > .price") # sélecteur CSS complet
+</code></pre>
+
+                        <h3>Selenium — Automatisation navigateur</h3>
+                        <pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+browser = webdriver.Chrome()
+browser.get("https://github.com")
+
+search = browser.find_element(By.NAME, "q")
+search.send_keys("python")
+search.submit()
+
+# Méthodes: By.ID, By.NAME, By.CLASS_NAME, By.CSS_SELECTOR, By.XPATH
+browser.quit()
+</code></pre>
+
+                        <h3>openpyxl — Excel</h3>
+                        <pre><code class="language-python">import openpyxl
+from openpyxl.styles import Font
+
+wb    = openpyxl.Workbook()
+sheet = wb.active
+sheet["A1"] = "Nom"
+sheet["A1"].font = Font(bold=True)
+sheet.append(["Makhlouf", 22])
+wb.save("etudiants.xlsx")
+
+# Lire
+wb    = openpyxl.load_workbook("etudiants.xlsx")
+sheet = wb["Sheet"]
+for row in sheet.iter_rows(min_row=2, values_only=True):
+    print(row)
+</code></pre>
+
+                        <h3>NumPy — Calcul numérique</h3>
+                        <pre><code class="language-python">import numpy as np
+
+arr    = np.array([1, 2, 3])
+matrix = np.array([[1,2,3],[4,5,6]])
+
+np.zeros((3, 4))        # matrice de zéros
+np.ones((2, 3))         # matrice de uns
+np.arange(1, 10)        # [1..9]
+np.linspace(0, 5, 10)   # 10 nombres entre 0 et 5
+
+# Opérations vectorisées
+arr + 5                 # [6, 7, 8]
+arr.sum()               # 6
+arr.mean()              # 2.0
+matrix.shape            # (2, 3)
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 11. Mon Package -->
+                <div class="topic" id="py-own">
+                    <div class="topic-title py"><span class="num py">11</span> Mon Propre Package — MakhloufFechetah_PDF
+                    </div>
+                    <div class="topic-body">
+                        <p>Package Python publié sur PyPI pour la conversion PDF.</p>
+                        <div class="file-tree">
+                            <span class="dir">MakhloufFechetah_PDF/</span>
+                            ├── <span class="file">setup.py</span> <span class="ann">← métadonnées</span>
+                            ├── <span class="file">README.md</span>
+                            ├── <span class="file">LICENSE</span>
+                            ├── <span class="dir">MakhloufFechetah_PDF/</span>
+                            │ ├── <span class="file">__init__.py</span>
+                            │ ├── <span class="file">pdf_to_text.py</span> <span class="ann">← PDF → texte</span>
+                            │ └── <span class="file">pdf_to_image.py</span> <span class="ann">← PDF → image</span>
+                            └── <span class="dir">dist/</span>
+                            ├── <span class="file">*.whl</span>
+                            └── <span class="file">*.tar.gz</span>
+                        </div>
+                        <pre><code class="language-python">from setuptools import setup, find_packages
+
+setup(
+    name="MakhloufFechetah_PDF",
+    version="1.0.0",
+    packages=find_packages(),
+    install_requires=["PyPDF2"]
+)
+</code></pre>
+                        <pre><code class="language-bash">pip install setuptools wheel twine
+python setup.py sdist bdist_wheel
+twine upload dist/*
+</code></pre>
+                    </div>
+                </div>
+
+            </div><!-- /python section -->
+
+            <hr class="divider" />
+
+            <!-- ════════════════════════════════════ -->
+            <!--  DJANGO SECTION                     -->
+            <!-- ════════════════════════════════════ -->
+            <div class="course-section" id="django">
+                <div class="section-header">
+                    <div class="section-icon dj">🎬</div>
+                    <div>
+                        <h2>Django — Vidly <span>— Cours Mosh Hamdani</span></h2>
+                    </div>
+                </div>
+
+                <!-- 1. Introduction -->
+                <div class="topic" id="dj-intro">
+                    <div class="topic-title dj"><span class="num dj">01</span> Introduction — Django & Vidly</div>
+                    <div class="topic-body">
+                        <div class="card-grid">
+                            <div class="mini-card cyan">
+                                <h4>Batteries incluses</h4>
+                                <p>ORM, admin, auth, templates, sessions intégrés</p>
+                            </div>
+                            <div class="mini-card cyan">
+                                <h4>DRY</h4>
+                                <p>Don't Repeat Yourself — réutilisation maximale</p>
+                            </div>
+                            <div class="mini-card cyan">
+                                <h4>Sécurité</h4>
+                                <p>Protection XSS, CSRF, injection SQL par défaut</p>
+                            </div>
+                            <div class="mini-card cyan">
+                                <h4>MVT</h4>
+                                <p>Model – View – Template (variante de MVC)</p>
+                            </div>
+                        </div>
+                        <h3>Le projet Vidly</h3>
+                        <p>Application de location de films avec :</p>
+                        <ul>
+                            <li><code>movies</code> — app principale : films et genres</li>
+                            <li><code>api</code> — exposition d'une API REST (Tastypie)</li>
+                            <li><code>vedly</code> — projet principal (settings, URLs racine)</li>
+                        </ul>
+                        <h3>Prérequis</h3>
+                        <ul>
+                            <li>Python ≥ 3.10</li>
+                            <li><code>pip</code> ou <code>pipenv</code></li>
+                            <li>VS Code recommandé</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. Premier projet -->
+                <div class="topic" id="dj-project">
+                    <div class="topic-title dj"><span class="num dj">02</span> Premier Projet Django</div>
+                    <div class="topic-body">
+                        <h3>Installation</h3>
+                        <pre><code class="language-bash">pip install django
+# ou avec pipenv
+pipenv install django
+django-admin startproject vedly
+</code></pre>
+                        <h3>Structure générée</h3>
+                        <div class="file-tree">
+                            <span class="dir">vedly/</span>
+                            ├── <span class="file">manage.py</span> <span class="ann">← utilitaire de gestion</span>
+                            └── <span class="dir">vedly/</span>
+                            ├── <span class="file">__init__.py</span>
+                            ├── <span class="file">settings.py</span> <span class="ann">← configuration générale</span>
+                            ├── <span class="file">urls.py</span> <span class="ann">← routage principal</span>
+                            ├── <span class="file">asgi.py</span>
+                            └── <span class="file">wsgi.py</span>
+                        </div>
+                        <h3>Commandes manage.py</h3>
+                        <pre><code class="language-bash">python manage.py runserver        # Démarrer le serveur → http://127.0.0.1:8000/
+python manage.py makemigrations   # Créer les migrations
+python manage.py migrate          # Appliquer les migrations
+python manage.py createsuperuser  # Créer un admin
+python manage.py shell            # Shell interactif
+python manage.py startapp movies  # Créer une app
+</code></pre>
+                        <h3>settings.py (extrait Vidly)</h3>
+                        <pre><code class="language-python">INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'movies.apps.MoviesConfig',   # App movies
+    'api.apps.ApiConfig',         # App API
+]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 3. Première App -->
+                <div class="topic" id="dj-app">
+                    <div class="topic-title dj"><span class="num dj">03</span> Première App Django</div>
+                    <div class="topic-body">
+                        <pre><code class="language-bash">python manage.py startapp movies
+</code></pre>
+                        <div class="file-tree">
+                            <span class="dir">movies/</span>
+                            ├── <span class="file">__init__.py</span>
+                            ├── <span class="file">admin.py</span> <span class="ann">← enregistrement des modèles</span>
+                            ├── <span class="file">apps.py</span> <span class="ann">← configuration de l'app</span>
+                            ├── <span class="dir">migrations/</span> <span class="ann">← historique BDD</span>
+                            ├── <span class="file">models.py</span> <span class="ann">← définition des tables</span>
+                            ├── <span class="file">tests.py</span>
+                            └── <span class="file">views.py</span> <span class="ann">← logique des requêtes</span>
+                        </div>
+                        <h3>Enregistrer l'app</h3>
+                        <pre><code class="language-python"># settings.py
+INSTALLED_APPS = [
+    # ...
+    'movies.apps.MoviesConfig',
+]
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 4. Views -->
+                <div class="topic" id="dj-views">
+                    <div class="topic-title dj"><span class="num dj">04</span> Views</div>
+                    <div class="topic-body">
+                        <p>Une <strong>view</strong> reçoit une <code>HttpRequest</code> et retourne une
+                            <code>HttpResponse</code>. C'est la couche logique.</p>
+                        <pre><code class="language-python"># movies/views.py
+from django.shortcuts import render, get_object_or_404
+from .models import Movie
+
+def index(request):
+    movies = Movie.objects.all()
+    return render(request, 'movies/index.html', {'movies': movies})
+
+def detail(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    return render(request, "movies/detail.html", {"movie": movie})
+</code></pre>
+                        <h3>URLs</h3>
+                        <pre><code class="language-python"># movies/urls.py
+from django.urls import path
+from . import views
+
+app_name = "movies"
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('&lt;int:movie_id&gt;', views.detail, name='detail'),
+]
+
+# vedly/urls.py (racine)
+urlpatterns = [
+    path('', views.home),
+    path('admin/', admin.site.urls),
+    path('movies/', include('movies.urls')),
+    path('api/', include(movie_resource.urls)),
+]
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 5. Models -->
+                <div class="topic" id="dj-models">
+                    <div class="topic-title dj"><span class="num dj">05</span> Models</div>
+                    <div class="topic-body">
+                        <pre><code class="language-python"># movies/models.py
+from django.db import models
+
+class Genre(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class Movie(models.Model):
+    title          = models.CharField(max_length=255)
+    release_year   = models.IntegerField()
+    number_in_stock = models.IntegerField()
+    daily_rate     = models.FloatField()
+    date_created   = models.DateTimeField(auto_now_add=True)
+    genre          = models.ForeignKey(Genre, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+</code></pre>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Champ</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>CharField</code></td>
+                                    <td>Texte court (max_length requis)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>IntegerField</code></td>
+                                    <td>Entier</td>
+                                </tr>
+                                <tr>
+                                    <td><code>FloatField</code></td>
+                                    <td>Décimal</td>
+                                </tr>
+                                <tr>
+                                    <td><code>DateTimeField</code></td>
+                                    <td>Date + heure</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ForeignKey</code></td>
+                                    <td>Relation Many-to-One</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ManyToManyField</code></td>
+                                    <td>Relation Many-to-Many</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BooleanField</code></td>
+                                    <td>Vrai / Faux</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Migrations -->
+                <div class="topic" id="dj-migrations">
+                    <div class="topic-title dj"><span class="num dj">06</span> Migrations</div>
+                    <div class="topic-body">
+                        <p>Les migrations traduisent les modèles Python en schéma de base de données.</p>
+                        <pre><code class="language-bash">python manage.py makemigrations   # génère le fichier migration
+python manage.py migrate          # applique les migrations
+python manage.py showmigrations   # liste l'état des migrations
+python manage.py sqlmigrate movies 0001  # voir le SQL généré
+</code></pre>
+                        <div class="flow">
+                            <span class="flow-step">models.py modifié</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step">makemigrations</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step">0001_initial.py créé</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step">migrate</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step">Table en BDD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Admin -->
+                <div class="topic" id="dj-admin">
+                    <div class="topic-title dj"><span class="num dj">07</span> Admin & Personnalisation</div>
+                    <div class="topic-body">
+                        <pre><code class="language-python"># movies/admin.py
+from django.contrib import admin
+from .models import Genre, Movie
+
+@admin.register(Movie)
+class MovieAdmin(admin.ModelAdmin):
+    list_display  = ("title", "genre", "release_year", "daily_rate")
+    list_filter   = ("genre",)
+    search_fields = ("title",)
+    ordering      = ("title",)
+
+admin.site.register(Genre)
+</code></pre>
+                        <pre><code class="language-bash">python manage.py createsuperuser   # créer l'admin
+# → http://127.0.0.1:8000/admin/
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 8. ORM -->
+                <div class="topic" id="dj-orm">
+                    <div class="topic-title dj"><span class="num dj">08</span> ORM & Base de Données</div>
+                    <div class="topic-body">
+                        <pre><code class="language-python"># Récupérer des données
+Movie.objects.all()                          # tous les films
+Movie.objects.filter(genre__id=1)           # par genre
+Movie.objects.filter(title__contains="inc") # recherche textuelle
+Movie.objects.get(pk=1)                     # un seul ou exception
+Movie.objects.exclude(release_year=2020)    # exclure
+
+# Trier
+Movie.objects.order_by("title")             # ascendant
+Movie.objects.order_by("-release_year")     # descendant
+
+# Créer
+movie = Movie(title="Inception", daily_rate=2.5)
+movie.save()
+# ou
+Movie.objects.create(title="Inception", daily_rate=2.5)
+
+# Modifier
+movie = Movie.objects.get(pk=1)
+movie.title = "New Title"
+movie.save()
+Movie.objects.filter(pk=1).update(title="New Title")
+
+# Supprimer
+movie.delete()
+Movie.objects.filter(release_year__lt=2000).delete()
+
+# Agrégations
+from django.db.models import Count, Avg, Max, Min, Sum
+Movie.objects.aggregate(count=Count('id'), avg=Avg('daily_rate'))
+</code></pre>
+                        <div class="callout tip">
+                            <span class="callout-icon">💡</span>
+                            <span>Utiliser <code>get_object_or_404(Movie, pk=id)</code> au lieu de <code>get()</code>
+                                dans les vues — retourne automatiquement une 404 si absent.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Templates -->
+                <div class="topic" id="dj-templates">
+                    <div class="topic-title dj"><span class="num dj">09</span> Templates & Bootstrap</div>
+                    <div class="topic-body">
+                        <h3>Template de base (base.html)</h3>
+                        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Vidly&lt;/title&gt;
+  &lt;!-- Bootstrap CDN --&gt;
+  &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav class="navbar navbar-dark bg-dark"&gt;
+    &lt;a class="navbar-brand" href="/"&gt;Vidly&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;div class="container mt-4"&gt;
+    {% block content %}{% endblock %}
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                        <h3>Template héritant (movies/index.html)</h3>
+                        <pre><code class="language-html">{% extends "base.html" %}
+{% block content %}
+&lt;table class="table"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Titre&lt;/th&gt;&lt;th&gt;Genre&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    {% for movie in movies %}
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href="{% url "movies:detail" movie.id %}"&gt;{{ movie.title }}&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;{{ movie.genre }}&lt;/td&gt;
+    &lt;/tr&gt;
+    {% empty %}
+    &lt;tr&gt;&lt;td colspan="2"&gt;Aucun film.&lt;/td&gt;&lt;/tr&gt;
+    {% endfor %}
+  &lt;/tbody&gt;
+&lt;/table&gt;
+{% endblock %}
+</code></pre>
+                        <h3>Balises de template Django</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Tag</th>
+                                    <th>Usage</th>
+                                </tr>
+                                <tr>
+                                    <td><code>{% extends "base.html" %}</code></td>
+                                    <td>Hériter d'un template</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{% block name %}</code></td>
+                                    <td>Définir un bloc remplaçable</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{% for x in list %}</code></td>
+                                    <td>Boucle</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{% if condition %}</code></td>
+                                    <td>Condition</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{% url "movies:detail" id %}</code></td>
+                                    <td>Générer une URL nommée</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{% include "partiel.html" %}</code></td>
+                                    <td>Inclure un sous-template</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{{ variable }}</code></td>
+                                    <td>Afficher une variable</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. URLs -->
+                <div class="topic" id="dj-urls">
+                    <div class="topic-title dj"><span class="num dj">10</span> URLs & Paramètres</div>
+                    <div class="topic-body">
+                        <h3>URLs nommées — la bonne pratique</h3>
+                        <pre><code class="language-python"># ❌ MAUVAIS — URL hardcodée
+"&lt;a href='/movies/{{ movie.id }}'&gt;..."
+
+# ✅ BON — référence par nom + namespace
+"{% url 'movies:detail' movie.id %}"
+</code></pre>
+                        <pre><code class="language-python"># movies/urls.py
+app_name = "movies"   # namespace
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('&lt;int:movie_id&gt;', views.detail, name='detail'),
+]
+</code></pre>
+                        <h3>Dans les vues Python</h3>
+                        <pre><code class="language-python">from django.urls import reverse
+from django.shortcuts import redirect
+
+url = reverse('movies:detail', args=[movie.id])   # /movies/1
+return redirect('movies:index')
+</code></pre>
+                        <h3>Erreurs 404</h3>
+                        <pre><code class="language-python">from django.shortcuts import get_object_or_404
+
+movie = get_object_or_404(Movie, pk=movie_id)
+# → Http404 automatique si introuvable
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 11. API -->
+                <div class="topic" id="dj-api">
+                    <div class="topic-title dj"><span class="num dj">11</span> Créer une API REST</div>
+                    <div class="topic-body">
+                        <h3>Django Tastypie</h3>
+                        <pre><code class="language-bash">pipenv install django-tastypie
+</code></pre>
+                        <pre><code class="language-python"># api/models.py
+from tastypie.resources import ModelResource
+from movies.models import Movie
+
+class MovieResource(ModelResource):
+    class Meta:
+        queryset      = Movie.objects.all()
+        resource_name = "movies"        # → /api/movies/
+        excludes      = ["date_created"]
+</code></pre>
+                        <h3>Endpoints générés automatiquement</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <tr>
+                                    <th>Méthode</th>
+                                    <th>URL</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td><code>GET</code></td>
+                                    <td><code>/api/movies/</code></td>
+                                    <td>Liste tous les films (JSON)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>GET</code></td>
+                                    <td><code>/api/movies/1/</code></td>
+                                    <td>Détail d'un film</td>
+                                </tr>
+                                <tr>
+                                    <td><code>POST</code></td>
+                                    <td><code>/api/movies/</code></td>
+                                    <td>Créer un film</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PUT</code></td>
+                                    <td><code>/api/movies/1/</code></td>
+                                    <td>Mettre à jour</td>
+                                </tr>
+                                <tr>
+                                    <td><code>DELETE</code></td>
+                                    <td><code>/api/movies/1/</code></td>
+                                    <td>Supprimer</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h3>Alternative — Django REST Framework (DRF)</h3>
+                        <pre><code class="language-python">from rest_framework import serializers, viewsets
+from movies.models import Movie
+
+class MovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Movie
+        fields = ['id', 'title', 'release_year', 'number_in_stock', 'daily_rate']
+
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset         = Movie.objects.all()
+    serializer_class = MovieSerializer
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- 12. Homepage & Architecture -->
+                <div class="topic" id="dj-homepage">
+                    <div class="topic-title dj"><span class="num dj">12</span> Homepage & Architecture Complète</div>
+                    <div class="topic-body">
+                        <h3>Architecture du projet Vidly</h3>
+                        <div class="file-tree">
+                            <span class="dir">Vidly/</span>
+                            ├── <span class="file">manage.py</span>
+                            ├── <span class="file">Pipfile</span>
+                            ├── <span class="file">db.sqlite3</span>
+                            │
+                            ├── <span class="dir">vedly/</span> <span class="ann">← Projet principal</span>
+                            │ ├── <span class="file">settings.py</span>
+                            │ ├── <span class="file">urls.py</span> <span class="ann">← URLs racine</span>
+                            │ ├── <span class="file">views.py</span> <span class="ann">← Vue homepage</span>
+                            │ ├── <span class="file">wsgi.py</span> / <span class="file">asgi.py</span>
+                            │
+                            ├── <span class="dir">movies/</span> <span class="ann">← App films</span>
+                            │ ├── <span class="file">admin.py</span> <span class="ann">← Config admin</span>
+                            │ ├── <span class="file">models.py</span> <span class="ann">← Genre, Movie</span>
+                            │ ├── <span class="file">views.py</span> <span class="ann">← index, detail</span>
+                            │ ├── <span class="file">urls.py</span> <span class="ann">← /movies/,
+                                /movies/&lt;id&gt;</span>
+                            │ ├── <span class="dir">migrations/</span>
+                            │ └── <span class="dir">templates/movies/</span>
+                            │ ├── <span class="file">index.html</span>
+                            │ └── <span class="file">detail.html</span>
+                            │
+                            ├── <span class="dir">api/</span> <span class="ann">← App API REST</span>
+                            │ └── <span class="file">models.py</span> <span class="ann">← MovieResource
+                                (Tastypie)</span>
+                            │
+                            └── <span class="dir">templates/</span> <span class="ann">← Templates globaux</span>
+                            ├── <span class="file">base.html</span> <span class="ann">← Layout Bootstrap</span>
+                            └── <span class="file">home.html</span> <span class="ann">← Page d'accueil</span>
+                        </div>
+
+                        <h3>Flux d'une requête Django</h3>
+                        <div class="flow" style="flex-direction:column; align-items:flex-start; gap:4px;">
+                            <div style="display:flex;align-items:center;gap:8px;"><span class="flow-step">Navigateur →
+                                    /movies/3</span></div>
+                            <div
+                                style="padding-left:20px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px;">
+                                ↓ vedly/urls.py → path('movies/', include('movies.urls'))</div>
+                            <div
+                                style="padding-left:20px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px;">
+                                ↓ movies/urls.py → path('&lt;int:movie_id&gt;', views.detail)</div>
+                            <div
+                                style="padding-left:20px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px;">
+                                ↓ movies/views.py → def detail(request, movie_id=3)</div>
+                            <div
+                                style="padding-left:20px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px;">
+                                ↓ ORM → Movie.objects.get(pk=3) → SQLite</div>
+                            <div
+                                style="padding-left:20px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px;">
+                                ↓ Template detail.html rendu avec contexte</div>
+                            <div style="display:flex;align-items:center;gap:8px;"><span class="flow-step"
+                                    style="background:var(--accent1-dim);border-color:#f9731630;color:#fb923c;">Réponse
+                                    HTTP 200 ✅</span></div>
+                        </div>
+
+                        <h3>Récapitulatif des commandes</h3>
+                        <pre><code class="language-bash">django-admin startproject monprojet  # créer projet
+python manage.py startapp monapp     # créer app
+python manage.py makemigrations      # générer migrations
+python manage.py migrate             # appliquer migrations
+python manage.py showmigrations      # état des migrations
+python manage.py runserver           # démarrer le serveur
+python manage.py createsuperuser     # créer admin
+python manage.py shell               # shell interactif
+python manage.py sqlmigrate movies 0001  # voir SQL
+</code></pre>
+                    </div>
+                </div>
+
+            </div><!-- /django section -->
+
+        </main>
+    </div>
+
+    <footer>
+        <span>📚 Dev Notes — <strong style="color:var(--text)">Makhlouf Fechetah</strong></span>
+        <span>Python · Django · Mosh Hamedani · 2024</span>
+    </footer>
+
+    <script>
+        hljs.highlightAll();
+
+        // Sidebar toggles
+        function toggleGroup(header) {
+            header.classList.toggle('open');
+            const items = header.nextElementSibling;
+            items.classList.toggle('open');
+        }
+
+        // Scroll progress
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+            document.getElementById('progress-fill').style.width = (scrollTop / scrollMax * 100) + '%';
+        });
+
+        // Active nav link highlight
+        const topics = document.querySelectorAll('.topic');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+                    if (link) link.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+        topics.forEach(t => observer.observe(t));
+
+        // Search / filter
+        document.getElementById('search').addEventListener('input', function () {
+            const q = this.value.toLowerCase().trim();
+            topics.forEach(topic => {
+                if (!q) { topic.classList.remove('hidden'); return; }
+                const text = topic.textContent.toLowerCase();
+                topic.classList.toggle('hidden', !text.includes(q));
+            });
+            // Show all nav groups if searching
+            document.querySelectorAll('.nav-items').forEach(ni => ni.classList.add('open'));
+        });
+    </script>
+</body>
+
+</html>
